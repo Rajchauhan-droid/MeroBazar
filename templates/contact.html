@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}contact us{% endblock %}
+
+{% block content %}
+
+<section class="section-hero overlay inner-page bg-image" id="home-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-7">
+          <h1 class="text-white font-weight-bold">📱 Contact us directly if you have any questions</h1>
+          <div class="custom-breadcrumbs">
+            <a href="#" class="btn btn-outline-warning btn-sm "><span class="text" style="color: black !important;">Home</span></a></a>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+<div id="contact-page" class="container">
+    <div class="bg">
+        <p style="font-size: larger; color:black; font-family: 'Marko One', serif;">
+			📱Please write your name, email address and a message <br>below if you have any questions.
+			One of our staff members will be happy to contact you directly and answer your questions as soon as possible. 
+		</p>
+
+        <div class="row">  
+
+                <div class="card col-md-7">
+    <div class="card-body " >
+      <form method="post">
+        {% csrf_token %}
+            {{form.as_p}}
+            <button type="submit" class="btn btn-outline-success">Send</button>
+        </form>
+    </div>
+
+</div>
+
+
+            <div class="col-sm-4">
+                <div class="contact-info">
+                    <h2 class="title text-center">Contact Info</h2>
+                    <address>
+                        <p>E-Shopper Inc.</p>
+                        <p>Itahari NEPAL</p>
+                        <p>Mobile: +977 9825314955</p>
+                        <p>Fax: ************</p>
+                        <p>Email: info@e-shopper.com</p>
+                    </address>
+                    <div class="social-networks">
+                        <h2 class="title text-center">Social Networking</h2>
+                        <ul>
+                            <li>
+                                <a href="#"><i class="fa fa-facebook"></i></a>
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-twitter"></i></a>
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-google-plus"></i></a>
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-youtube"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>   
+
+        </div>  
+    </div>	
+</div><!--/#contact-page-->
+{% endblock %}

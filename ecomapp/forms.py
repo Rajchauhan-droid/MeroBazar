@@ -1,0 +1,188 @@
+from django import forms
+from .models import Order, Customer, Product
+from django.contrib.auth.models import User
+from .models import *
+
+
+class CheckoutForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ["ordered_by", "shipping_address",
+                  "mobile", "email", "payment_method"]
+
+
+class CustomerRegistrationForm(forms.ModelForm):
+    username = forms.CharField(widget=forms.TextInput())
+    password = forms.CharField(widget=forms.PasswordInput())
+    email = forms.CharField(widget=forms.EmailInput())
+
+    class Meta:
+        model = Customer
+        fields = ["username", "password", "email", "full_name", "address"]
+
+    def clean_username(self):
+        uname = self.cleaned_data.get("username")
+        if User.objects.filter(username=uname).exists():
+            raise forms.ValidationError(
+                "Customer with this username already exists")
+
+        return uname
+
+
+class CustomerLoginForm(forms.Form):
+    username = forms.CharField(widget=forms.TextInput())
+    password = forms.CharField(widget=forms.PasswordInput())
+
+
+class AdminLoginForm(forms.Form):
+    username = forms.CharField(widget=forms.TextInput())
+    password = forms.CharField(widget=forms.PasswordInput())
+
+
+class ProductForm(forms.ModelForm):
+    more_images = forms.FileField(required=False, widget=forms.FileInput(attrs={
+        "class": "form-control",
+        "multiple": True
+    }))
+
+    class Meta:
+        model = Product
+        fields = ["title", "slug", "category", "image", "marked_price",
+                  "selling_price", "description", "warranty", "return_policy"]
+        widgets = {
+            "title": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Enter the product title here..."
+            }),
+            "slug": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Enter the unique slug here..."
+            }),
+            "category": forms.Select(attrs={
+                "class": "form-control"
+            }),
+            "image": forms.ClearableFileInput(attrs={
+                "class": "form-control"
+            }),
+            "marked_price": forms.NumberInput(attrs={
+                "class": "form-control",
+                "placeholder": "Marked price of the product..."
+            }),
+            "selling_price": forms.NumberInput(attrs={
+                "class": "form-control",
+                "placeholder": "Selling price of the product..."
+            }),
+            "description": forms.Textarea(attrs={
+                "class": "form-control",
+                "placeholder": "Description of the product...",
+                "rows": 5
+            }),
+            "warranty": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Enter the product warranty here..."
+            }),
+            "return_policy": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Enter the product return policy here..."
+            }),
+
+        }
+
+
+class PasswordForgotForm(forms.Form):
+    email = forms.CharField(widget=forms.EmailInput(attrs={
+        "class": "form-control",
+        "placeholder": "Enter the email used in customer account..."
+    }))
+
+    def clean_email(self):
+        e = self.cleaned_data.get("email")
+        if Customer.objects.filter(user__email=e).exists():
+            pass
+        else:
+            raise forms.ValidationError(
+                "Customer with this account does not exists..")
+        return e
+
+
+class PasswordResetForm(forms.Form):
+    new_password = forms.CharField(widget=forms.PasswordInput(attrs={
+        'class': 'form-control',
+        'autocomplete': 'new-password',
+        'placeholder': 'Enter New Password',
+    }), label="New Password")
+    confirm_new_password = forms.CharField(widget=forms.PasswordInput(attrs={
+        'class': 'form-control',
+        'autocomplete': 'new-password',
+        'placeholder': 'Confirm New Password',
+    }), label="Confirm New Password")
+
+    def clean_confirm_new_password(self):
+        new_password = self.cleaned_data.get("new_password")
+        confirm_new_password = self.cleaned_data.get("confirm_new_password")
+        if new_password != confirm_new_password:
+            raise forms.ValidationError(
+                "New Passwords did not match!")
+        return confirm_new_password
+
+
+class ContactForm(forms.Form):
+
+    BUG = 'b'
+    FEEDBACK = 'fb'
+    NEW_FEATURE = 'nf'
+    OTHER = 'o'
+    purpose_choices = (
+        (FEEDBACK, 'Feedback'),
+        (NEW_FEATURE, 'Feature Request'),
+        (BUG, 'Bug'),
+        (OTHER, 'Other'),
+    )
+
+    contact_name = forms.CharField(required=True, label="Name")
+    contact_email = forms.EmailField(required=True, label="Email")
+    purpose = forms.ChoiceField(choices=purpose_choices)
+    content = forms.CharField(
+        required=True, widget=forms.Textarea, label="Message")
+
+    class Meta:
+        model = User
+        fields = [
+            "contact_name",
+            "contact_email",
+            "content",
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super(ContactForm, self).__init__(*args, **kwargs)
+
+        self.fields['contact_name'].widget.attrs['class'] = 'form-control'
+        self.fields['contact_name'].widget.attrs['placeholder'] = 'Full Name'
+        self.fields['contact_name'].label = ''
+
+        self.fields['contact_email'].widget.attrs['class'] = 'form-control'
+        self.fields['contact_email'].widget.attrs['placeholder'] = 'E-mail'
+        self.fields['contact_email'].label = ''
+
+        self.fields['content'].widget.attrs['class'] = 'form-control'
+        self.fields['content'].widget.attrs['placeholder'] = 'Message'
+        self.fields['content'].label = ''
+
+    def clean_job_type(self):
+        job_type = self.cleaned_data.get('contact_name')
+
+        if not job_type:
+            raise forms.ValidationError("Service is required")
+        return job_type
+
+
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = ("comment", "rating")
+
+
+class CartBookmarkForm(forms.ModelForm):
+    class Meta:
+        model = BookmarkProduct
+        fields = ['cart']

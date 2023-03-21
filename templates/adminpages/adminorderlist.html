@@ -1,0 +1,86 @@
+{% extends 'adminpages/adminbase.html' %}
+{% block title %}All order_status{% endblock %}
+
+
+{% block content %}
+
+<section id="cart_items">
+    <div class="container">
+        <div class="breadcrumbs">
+            <ol class="breadcrumb">
+              <li><a href="#">Home</a></li>
+              <li class="active">Shopping Cart</li>
+            </ol>
+        </div>
+        <h3>All Product list</h3><hr>
+        <div class="table-responsive cart_info">
+            <table class="table table-condensed">
+                <thead>
+                    <tr class="cart_menu">
+
+                        
+
+                        
+                        <td class="symbol-no">SN</td>
+                        <td class="image">Order ID</td>
+                        <td class="Image">Customer</td>
+                        <td class="price">Ordered On</td>
+                        <td class="Views">Amount</td>
+                        <td class="Views">Status</td>
+                        <td class="image">Image</td>
+
+
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in allorders %}
+
+
+
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+
+                        <td><a href="{% url 'ecomapp:adminorderdetail' order.id %}">#ORDER_{{order.id}}</a></td>
+
+
+
+                        <td class="cart_product">
+                            {{order.ordered_by}}
+
+                        </td>
+
+                        
+                        <td class="cart_price">
+                            {{order.created_at}}
+                        </td>
+                        
+                        <td class="cart_total">
+                            <p class="cart_total_price">{{order.total}}</p>
+                        </td>
+
+                        <td class="cart_total">
+                            <p class="cart_total_price">{{order.order_status}}</p>
+                        </td>
+
+                    <td><img src="{{order.image.url}}" style="height: 60px;" alt=""></td>
+
+                        
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+            </table>
+            
+        </div>
+        
+
+
+    </div>
+
+    
+</section> <!--/#cart_items-->
+
+
+{% endblock %}

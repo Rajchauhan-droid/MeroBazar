@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %} My cart{% endblock %}
+
+{% block content %}
+
+<section id="cart_items">
+    <div class="container">
+        <div class="breadcrumbs">
+            <ol class="breadcrumb">
+              <li><a href="#">Home</a></li>
+              <li class="active">Shopping Cart</li>
+            </ol>
+        </div>
+        <div class="table-responsive cart_info">
+            <table class="table table-condensed">
+                <thead>
+                    <tr class="cart_menu">
+                        <td>SN</td>
+
+                        <td class="image">Item</td>
+                        <td class="Title">Title</td>
+                        <td class="price">Price</td>
+                        <td class="quantity">Quantity</td>
+                        <td class="total">sub-Total</td>
+                        <td>action</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cp in cart.cartproduct_set.all %}
+
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+
+                        <td class="cart_product">
+                            <a href=""><img src="{{cp.image.url}}" alt=""></a>
+                        </td>
+                        <td class="cart_description">
+                            <h4><a href="">{{cp.product.title}}</a></h4>
+                            <p>Web ID: 1089772</p>
+                        </td>
+                        <td class="cart_price">
+                            <p>{{cp.rate}}</p>
+                        </td>
+                        <td class="cart_quantity">
+                            <div class="cart_quantity_button">
+                                <a class="cart_quantity_up" href="{% url 'ecomapp:managecart' cp.id %}?action=inc"> + </a>
+                                <input class="cart_quantity_input" type="text" name="quantity" value="{{cp.quantity}}" autocomplete="off" size="{{cp.quantity}}">
+                                <a class="cart_quantity_down" href="{% url 'ecomapp:managecart' cp.id %}?action=dcr"> - </a>
+                            </div>
+                        </td>
+                        <td class="cart_total">
+                            <p class="cart_total_price">{{cp.subtotal}}</p>
+                        </td>
+                        <td class="cart_delete">
+                            <a class="cart_quantity_delete" href="{% url 'ecomapp:managecart' cp.id %}?action=rmv"><i class="fa fa-times"></i></a>
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+            </table>
+            
+        </div>
+        <div class="col-sm-6">
+            <div class="total_area">
+                <ul>
+                    <li>Cart Total <span>Rs. {{cart.total}}</span></li>
+                    {% if cart.cartproduct_set.all %}
+                    <a class="btn btn-danger check_out" href="{% url 'ecomapp:emptycart' %}">Empty Cart</a>
+                    {% endif %}
+                    
+                </ul>
+                {% if cart.cartproduct_set.all %}
+        
+                    <a class="btn btn-default check_out" href="{% url 'ecomapp:checkout' %}">Check Out</a>
+                    {% endif %}
+            </div>
+        </div>
+
+
+    </div>
+
+    
+</section> <!--/#cart_items-->
+
+
+
+
+{% endblock %}

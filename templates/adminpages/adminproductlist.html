@@ -1,0 +1,57 @@
+{% extends 'adminpages/adminbase.html' %}
+{% block title %}All Products{% endblock %}
+
+
+{% block content %}
+
+<section id="cart_items">
+    <div class="container">
+        <div class="breadcrumbs">
+            <ol class="breadcrumb">
+              <li><a href="#">Home</a></li>
+              <li class="active">Shopping Cart</li>
+            </ol>
+        </div>
+        <h3>All Product list</h3><hr>
+            <a href="{% url 'ecomapp:adminproductcreate' %}">Add New Product</a>
+        <div class="table-responsive cart_info">
+            <table class="table table-condensed">
+                <thead>
+                    <tr class="cart_menu">
+                        <td class="symbol-no">SN</td>
+                        <td class="title">Product Title</td>
+                        <td class="image">Image</td>
+                        <td class="price">Price</td>
+                        <td class="Views">Views</td>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in allproducts %}
+
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{p.title}}</td>
+                        <td><img src="{{p.image.url}}" style="height: 60px;" alt=""></td>
+                        <td>{{p.selling_price}}</td>
+                        <td>{{p.view_count}}</td>
+                    </tr>
+
+                    
+
+                    {% endfor %}
+
+                </tbody>
+            </table>
+            
+        </div>
+        
+
+
+    </div>
+
+    
+</section> <!--/#cart_items-->
+
+
+{% endblock %}
